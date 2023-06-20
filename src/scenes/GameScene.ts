@@ -1,5 +1,7 @@
+import * as Phaser from 'phaser';
+
 import AppleBonus from '~/objects/bonus/AppleBonus'
-import Snake from '~/objects/snake'
+import Snake from '~/objects/Snake'
 import { ceilsXCount, ceilsYCount, ceil, gameWidth, gameHeight, dephs } from '~/config'
 import Overlay from '~/overlay/Overlay'
 import Timer from '~/overlay/Timer'

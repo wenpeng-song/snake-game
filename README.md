@@ -1,86 +1,49 @@
-![](https://i.imgur.com/tfiFz2r.png)
+# Phaser 3 TypeScript Project Template
 
-### [Snake Demo](https://iliyazelenko.github.io/phaser3-snake-cordova/)
+This quick-start project template combines Phaser 3.60 with [TypeScript 5](https://www.typescriptlang.org/) and uses [Rollup](https://rollupjs.org) for bundling.
 
-https://iliyazelenko.github.io/phaser3-snake-cordova/
+## Requirements
 
-## Getting started
+[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
 
-### Installing the dependencies
+## Available Commands
 
-Install the dependencies (yarn is recomended):
+| Command | Description |
+|---------|-------------|
+| `npm install` | Install project dependencies |
+| `npm run watch` | Build project and open web server running project, watching for changes |
+| `npm run dev` | Builds project and open web server, but do not watch for changes |
+| `npm run build` | Builds code bundle with production settings (minification, no source maps, etc..) |
 
-```
-yarn # Or npm install
-```
+## Writing Code
 
-### Restoring platforms
+After cloning the repo, run `npm install` from your project directory. Then, you can start the local development
+server by running `npm run watch`. The first time you run this you should see the following demo run:
 
-Platforms are automatically restored from package.json and config.xml when the 'cordova prepare' command is run.
+![Screenshot](screenshot.png "Phaser 3 Example")
 
-```
-cordova prepare
-```
+After starting the development server with `npm run watch`, you can edit any files in the `src` folder
+and Rollup will automatically recompile and reload your server (available at `http://localhost:10001`
+by default).
 
-### Running Dev Server
+## Configuring Rollup
 
-Easy development in [HMR (Hot Module Replacement) mode](https://webpack.js.org/concepts/hot-module-replacement/):
+* Edit the file `rollup.config.dev.js` to edit the development build.
+* Edit the file `rollup.config.dist.js` to edit the distribution build.
 
-```
-yarn dev # Or npm run dev
-```
+You will find lots of comments inside the rollup config files to help you do this.
 
-### Building for production
+Note that due to the build process involved, it can take around 20 seconds to build the initial bundle. Times will vary based on CPU and local drive speeds. The development config does not minify the code in order to save build time, but it does generate source maps. If you do not require these, disable them in the config to speed it up further.
 
-Perform a build (bundle.js) in `www` folder with copy assets and html page from src.
+## Versions Used
 
-```
-yarn build # Or npm run build
-```
-
-### Run on cordova
-
-Run on real device:
-
-```
-cordova run android --device
-```
-
-Run on emulator (virtual device):
-
-```
-cordova run android
-```
-
-Run on specific emulator:
-
-```
-# shows list of devices
-cordova run android --list
-# specify device
-cordova run android --target "Nexus_4_API_26"
-```
-
-## Cheat Sheets
-
-- [Phaser.Game](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/game-config.md)
-- [Phaser.Scene](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/scene-config.md)
-- [Phaser.GameObject.Image](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/gameobjects/image.md)
-- [Phaser.GameObject.Sprite](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/gameobjects/sprite.md)
-- [Phaser.GameObject.Group](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/gameobjects/group.md)
-- [Phaser.GameObject.Mesh](https://github.com/iliyaZelenko/phaser3-typescript/blob/master/cheatsheets/gameobjects/mesh.md)
-
-## External Resources
-
-- [Phaser 3 Framework](https://github.com/photonstorm/phaser)
-- [Phaser 3 Docs with TypeScript Definition File](https://github.com/photonstorm/phaser3-docs)
-- [Phaser 3 Online Docs](https://photonstorm.github.io/phaser3-docs/index.html)
-- [Phaser 3 Official Examples](https://github.com/photonstorm/phaser3-examples)
-- [Cordova off. site](https://cordova.apache.org/)
-
-## Helpful tools
-
-- [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool)
-- [Tiled](https://www.mapeditor.org)
-- [Littera](http://kvazars.com/littera)
-
+* Phaser 3.60
+* TypeScript 5.0.3
+* Rollup 3.20.2
+* Rollup Plugins:
+  * @rollup/plugin-commonjs 24.0.1
+  * @rollup/plugin-node-resolve 15.0.2
+  * @rollup/plugin-replace 5.0.2
+  * @rollup/plugin-terser 0.4.0
+  * @rollup/plugin-typescript 11.1.0
+  * rollup-plugin-serve 2.0.2

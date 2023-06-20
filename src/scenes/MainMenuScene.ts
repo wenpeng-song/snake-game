@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 import AbstractStorage from '~/storage/AbstractStorage'
 import LocalStorage from '~/storage/LocalStorage'
 

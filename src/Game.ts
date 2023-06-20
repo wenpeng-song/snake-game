@@ -1,4 +1,6 @@
-import { gameContainer, overlay } from '~/config'
+import * as Phaser from 'phaser';
+
+import gameConfig, {gameContainer, overlay } from '~/config'
 
 export default class Game extends Phaser.Game {
   constructor (GameConfig: GameConfig) {
@@ -23,3 +25,5 @@ export default class Game extends Phaser.Game {
     overlay.classList.remove('game__overlay--hidden')
   }
 }
+
+const game = new Game(gameConfig)

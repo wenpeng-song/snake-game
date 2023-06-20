@@ -1,8 +1,10 @@
-import BootScene from '~/Scenes/bootScene'
+import * as Phaser from 'phaser';
+
+import BootScene from '~/scenes/BootScene'
 import MainMenuScene from '~/scenes/MainMenuScene'
 import GameScene from '~/scenes/GameScene'
 
-import SwipePlugin from 'phaser3-swipe-plugin'
+// import SwipePlugin from 'phaser3-swipe-plugin'
 
 export const gameContainer: HTMLElement = document.querySelector('#game') || document.body
 const gameContainerBCR = gameContainer.getBoundingClientRect()
@@ -46,16 +48,7 @@ const gameConfig: GameConfig = {
     target: 144,
     min: 60
   },
-  backgroundColor: '#000000',
-  plugins: {
-    global: [
-      {
-        key: 'SwipePlugin',
-        plugin: SwipePlugin,
-        start: true
-      }
-    ]
-  }
+  backgroundColor: '#000000'
 }
 
 export default gameConfig

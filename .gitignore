@@ -1,13 +1,16 @@
-/www/
-/platforms/
-/plugins/
-/dist
-/node_modules
-
-*.log
-/.vscode/
-/.idea/
-
-.DS_Store
+# System and IDE files
 Thumbs.db
-UserInterfaceState.xcuserstate
+.DS_Store
+.idea
+*.suo
+*.sublime-project
+*.sublime-workspace
+
+# Vendors
+node_modules/
+
+# Build
+/npm-debug.log
+
+/dist
+.github
