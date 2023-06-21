@@ -19,7 +19,7 @@ export default class Snake {
     DOWN: 'down',
     LEFT: 'left'
   }
-  private initialLength: number = 20
+  private initialLength: number = 4; 
   private dead: boolean = false
   private currentDir: string = this.DIRECTIONS.UP
   private lastMoveDir: string = this.currentDir
