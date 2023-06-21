@@ -32,7 +32,7 @@ export default class SnakeManager {
     switch (count) {
       case 1:
         {
-          leftStartX = this.scene.getCeilXPos(Math.floor(ceilsXCount / 4));
+          leftStartX = this.scene.getCeilXPos(Math.floor(ceilsXCount / 2));
           leftStepX = 0;
           cursors.cursors0 = this.scene.input.keyboard.createCursorKeys()
         }
@@ -127,7 +127,24 @@ export default class SnakeManager {
     // }
   }
 
-  private checkTaran () {
+  public checkTaran () {
+    for (let i = 0; i < this.snakes.length; i++) {
+      const snake = this.snakes[i];
+      const others = this.snakes.filter(s => s.name != snake.name);
+      for (let j = 0; j < others.length; j++) {
+        const other = others[j];
+        
+        const taran = other.bodyPartsPositions
+          .slice(0, -1)
+          .find(i =>
+            Math.abs(i.x - snake.snakeHeadX) < ceil && Math.abs(i.y - snake.snakeHeadY) < ceil
+          )
+        snake.setDead(taran);
+        if (taran) {
+          break;
+        }
+      }
+    }
     // const taran = this.snake.bodyPartsPositions
     //   .slice(0, -1)
     //   .find(i =>
@@ -138,17 +155,20 @@ export default class SnakeManager {
   }
 
   public checkTakeBonus (bonusesPositions: any[]) {
+    if (!this.snakes.length)
+      return;
     const snakeHalfSize = this.snakes[0].size / 2
 
     let snake = null;
     const bonusPos = bonusesPositions.find(({ x: bonusX, y: bonusY }) => {
       snake =  this.snakes.find(snake => {
-        snake.bodyPartsPositions.some(({ x: bodyX, y: bodyY }: any) =>
+        return snake.bodyPartsPositions.some(({ x: bodyX, y: bodyY }: any) =>
         bonusX >= bodyX - snakeHalfSize &&
         bonusY >= bodyY - snakeHalfSize &&
         bonusX <= bodyX + snakeHalfSize &&
         bonusY <= bodyY + snakeHalfSize
       )})
+      return !!snake;
     });
 
     if (bonusPos && snake) {
@@ -188,12 +208,16 @@ export default class SnakeManager {
 
   private onDead(snake: Snake) {
     const delay_to_came_back = 3000; // 3s
+    const name = snake.name;
+    const cursors = snake.cursors;
+    const index = this.snakes.indexOf(snake);
+    this.snakes.splice(index, 1);
+    snake.destroy();
     // after {delay_to_came_back} the snake came back to life
     setTimeout(() => {
       const ceilPos = this.scene.getRandomCeil();
 
-      let newSnake = new Snake(this, ceilPos.x, ceilPos.y, snake.name, snake.cursors);
-      this.snakes.splice(this.snakes.indexOf(snake), 1);
+      let newSnake = new Snake(this.scene, ceilPos.x, ceilPos.y, name, cursors);
       this.snakes.push(newSnake);
     }, delay_to_came_back);
   }

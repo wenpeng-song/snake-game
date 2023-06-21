@@ -177,6 +177,10 @@ export default class Snake {
     return this.bodyPartsPositions.length
   }
 
+  public destroy() {
+    return this.bodyPartsSprites.forEach(s => s.destroy());
+  }
+
   private updateBodyPartsBonuses () {
     this.bodyPartsBonuses = this.bodyPartsBonuses.map((bonus) => {
       let { posIndex: i } = bonus

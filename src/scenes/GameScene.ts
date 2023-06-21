@@ -81,6 +81,7 @@ export default class GameScene extends Phaser.Scene {
       this.snakeManager.update(time);
       this.snakeManager.checkTakeBonus(this.bonusesPositions);
     }
+    this.snakeManager.checkTaran();
 
     this.fpsText.setText(this.getFPS())
   }
