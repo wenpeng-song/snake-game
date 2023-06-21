@@ -198,9 +198,10 @@ export default class GameScene extends Phaser.Scene {
     const bonuses = [AppleBonus, PlumBonus, PearBonus, GrapesBonus, PeachBonus, ApricotBonus]
     const randomBonus = bonuses[Math.round(Math.random() * bonuses.length - 1)]
 
-    const apple = new randomBonus(this, ceilPos)
-
-    this.bonusesPositions.push({ ...ceilPos, bonus: apple })
+    if (randomBonus) {
+      const apple = new randomBonus(this, ceilPos)
+      this.bonusesPositions.push({ ...ceilPos, bonus: apple })
+    }
   }
 
   private checkCollision (): void {

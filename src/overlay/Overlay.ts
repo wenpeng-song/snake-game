@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 import GameScene from '~/scenes/GameScene'
 import { dephs, gameWidth } from '~/config'
 

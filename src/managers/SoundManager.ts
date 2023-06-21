@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 export default class SoundManager {
   public sounds: {[key: string]: Phaser.Sound.BaseSound} = {}
 

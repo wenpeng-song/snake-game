@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 import { snakeSize, ceilsXCount, ceilsYCount } from '~/config'
 import GameScene from '~/scenes/GameScene'
 import AbstractBonus from '~/objects/bonus/AbstractBonus'

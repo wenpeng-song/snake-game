@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 import { ceil, dephs } from '~/config'
 import AbstractBonus from '~/objects/bonus/AbstractBonus'
 
