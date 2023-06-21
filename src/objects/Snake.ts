@@ -24,8 +24,10 @@ export default class Snake {
   private currentDir: string = this.DIRECTIONS.UP
   private lastMoveDir: string = this.currentDir
   private scene: GameScene
+  private name: string;
 
-  constructor (scene, x, y) {
+  constructor (scene, x, y, name) {
+    this.name = name;
     this.scene = scene
     this.snakeHeadX = x
     this.snakeHeadY = y
@@ -236,7 +238,7 @@ export default class Snake {
       const next = this.bodyPartsPositions[i + 1]
 
       const setTex = (frame) => {
-        sprite.setTexture('snake', frame)
+        sprite.setTexture(this.name, frame)
       }
 
       // head
@@ -359,7 +361,7 @@ export default class Snake {
   }
 
   private addSprite (x, y) {
-    const sprite = this.scene.add.sprite(x, y, 'snake', 4)
+    const sprite = this.scene.add.sprite(x, y, this.name, 4)
 
     // setSize это другое
     sprite.setDisplaySize(this.size, this.size)
@@ -368,7 +370,7 @@ export default class Snake {
   }
 
   private addBodyBonusSprite (x, y) {
-    const sprite = this.scene.add.sprite(x, y, 'snake', 16) // 15
+    const sprite = this.scene.add.sprite(x, y, this.name, 16) // 15
 
     sprite.setDepth(3)
     sprite.setDisplaySize(this.size / 2, this.size / 2)

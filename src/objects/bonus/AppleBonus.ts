@@ -16,7 +16,6 @@ export default class AppleBonus extends AbstractBonus {
     this.x = x
     this.y = y
 
-    // this.sprite = this.scene.add.sprite(this.x, this.y, 'snake', 15)
     this.sprite = this.scene.add.sprite(this.x, this.y, 'fruits', 'sprite40')
 
     // setSize это другое

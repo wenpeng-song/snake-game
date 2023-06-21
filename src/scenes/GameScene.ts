@@ -19,6 +19,7 @@ export default class GameScene extends Phaser.Scene {
   public readonly snakeStartY = this.getCeilYPos(Math.floor(ceilsYCount / 2))
 
   public snake!: Snake
+  public snake2!: Snake
   public overlay!: Overlay
   public timer!: Timer
   public storage!: AbstractStorage
@@ -39,7 +40,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public init (): void {
-    this.snake = new Snake(this, this.snakeStartX, this.snakeStartY)
+    this.snake = new Snake(this, this.snakeStartX, this.snakeStartY, 'snake');
+    this.snake2 = new Snake(this, this.snakeStartX, this.snakeStartY, 'snake2');
     this.overlay = new Overlay(this)
     this.timer = new Timer(() => {
       this.overlay.updateTimer()
