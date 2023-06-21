@@ -13,13 +13,11 @@ import PearBonus from '~/objects/bonus/PearBonus'
 import GrapesBonus from '~/objects/bonus/GrapesBonus'
 import PeachBonus from '~/objects/bonus/PeachBonus'
 import ApricotBonus from '~/objects/bonus/ApricotBonus'
+import SnakeManager from '../managers/SnakeManager';
 
 export default class GameScene extends Phaser.Scene {
-  public readonly snakeStartX = this.getCeilXPos(Math.floor(ceilsXCount / 2))
-  public readonly snakeStartY = this.getCeilYPos(Math.floor(ceilsYCount / 2))
 
-  public snake!: Snake
-  public snake2!: Snake
+  public snakeManager!: SnakeManager
   public overlay!: Overlay
   public timer!: Timer
   public storage!: AbstractStorage
@@ -31,7 +29,6 @@ export default class GameScene extends Phaser.Scene {
 
   // texts
   private fpsText!: Phaser.GameObjects.BitmapText
-  private cursors!: Phaser.Input.Keyboard.CursorKeys
 
   constructor () {
     super({
@@ -40,19 +37,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   public init (): void {
-    this.snake = new Snake(this, this.snakeStartX, this.snakeStartY, 'snake');
-    this.snake2 = new Snake(this, this.snakeStartX, this.snakeStartY, 'snake2');
-    this.overlay = new Overlay(this)
     this.timer = new Timer(() => {
       this.overlay.updateTimer()
     })
     this.storage = new LocalStorage()
     this.soundManager = new SoundManager()
+    this.snakeManager = new SnakeManager(this, this.storage, this.soundManager);
+    this.snakeManager.initSnake(2);
+    this.overlay = new Overlay(this)
 
     window.game.showOverlay()
-
-    // input
-    this.cursors = this.input.keyboard.createCursorKeys()
 
     this.addFPSText()
     this.addEventsListeners()
@@ -84,51 +78,11 @@ export default class GameScene extends Phaser.Scene {
       this.addBonus()
     }
     if (this.worldIterations % snakeMoveIterationsRange === 0) {
-      this.handleInput()
-      this.snake.move()
-
-      this.checkCollision()
+      this.snakeManager.update(time);
+      this.snakeManager.checkTakeBonus(this.bonusesPositions);
     }
 
     this.fpsText.setText(this.getFPS())
-
-    if (this.snake.isDead()) {
-      this.onDead()
-    }
-  }
-
-  public handleInput (): void {
-    const wantMoveDir = this.getDirByInput()
-
-    this.snake.setDir(wantMoveDir)
-  }
-
-  public getDirByInput (presedKey?) {
-    const input = {
-      // Format: [button]: key
-      [this.snake.DIRECTIONS.UP]: ['w', 'ArrowUp'],
-      [this.snake.DIRECTIONS.RIGHT]: ['d', 'ArrowRight'],
-      [this.snake.DIRECTIONS.DOWN]: ['s', 'ArrowDown'],
-      [this.snake.DIRECTIONS.LEFT]: ['a', 'ArrowLeft']
-    }
-
-    // Same as below:
-    for (const [button, keys] of Object.entries(input)) {
-      if ((this.cursors[button] && this.cursors[button].isDown) || keys.includes(presedKey)) {
-        return button
-      }
-    }
-    // Same as above:
-    // switch (true) {
-    //   case (this.cursors.up && this.cursors.up.isDown) || presedKey === 'w':
-    //     return this.snake.DIRECTIONS.UP
-    //   case (this.cursors.right && this.cursors.right.isDown) || presedKey === 'd':
-    //     return this.snake.DIRECTIONS.RIGHT
-    //   case (this.cursors.down && this.cursors.down.isDown) || presedKey === 's':
-    //     return this.snake.DIRECTIONS.DOWN
-    //   case (this.cursors.left && this.cursors.left.isDown) || presedKey === 'a':
-    //     return this.snake.DIRECTIONS.LEFT
-    // }
   }
 
   public getRandomCeil () {
@@ -160,40 +114,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  private checkTaran () {
-    const taran = this.snake.bodyPartsPositions
-      .slice(0, -1)
-      .find(i =>
-        i.x === this.snake.snakeHeadX && i.y === this.snake.snakeHeadY
-      )
-
-    this.snake.setDead(taran)
-  }
-
-  private checkTakeBonus () {
-    const snakeHalfSize = this.snake.size / 2
-
-    const bonusPos = this.bonusesPositions.find(({ x: bonusX, y: bonusY }) =>
-      this.snake.bodyPartsPositions.some(({ x: bodyX, y: bodyY }: any) =>
-        bonusX >= bodyX - snakeHalfSize &&
-        bonusY >= bodyY - snakeHalfSize &&
-        bonusX <= bodyX + snakeHalfSize &&
-        bonusY <= bodyY + snakeHalfSize
-      )
-    )
-
-    if (bonusPos) {
-      const bonus = bonusPos.bonus
-      const randomSoundKey = 1 + Math.round(Math.random() * (5 - 1))
-
-      this.bonusesPositions = this.bonusesPositions.filter(i => i !== bonusPos)
-
-      bonus.onCollisionWithSnake()
-      this.snake.onTakenBonus(bonus)
-      this.soundManager.play('eat' + randomSoundKey)
-    }
-  }
-
   // TODO bonus does not appear on the snake
   private addBonus () {
     const ceilPos = this.getRandomCeil()
@@ -206,10 +126,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  private checkCollision (): void {
-    this.checkTakeBonus()
-    this.checkTaran()
-  }
 
   private getRandomInt (min: number, max: number): number {
     // let rand = Math.round(min - 0.5 + Math.random() * (max - min + 1))
@@ -219,19 +135,11 @@ export default class GameScene extends Phaser.Scene {
   }
 
   private addEventsListeners () {
-    this.input.keyboard.on('keydown', ({ key }) => {
-      this.snake.setDir(
-        this.getDirByInput(key)
-      )
-    })
     this.events.on('pause', () => {
       this.timer.pause()
     })
     this.events.on('resume', () => {
       this.timer.resume()
-    })
-    window.game.events.on('swipe', (dir) => {
-      this.snake.setDir(dir)
     })
     window.game.events.on('app_toggle_debug', (isDebug: boolean) => {
       this.fpsText.setVisible(isDebug)

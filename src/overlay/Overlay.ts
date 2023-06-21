@@ -43,7 +43,7 @@ export default class Overlay {
 
   public updateSnakeLength () {
     this.snakeLengthText.setText(
-      this.scene.snake.getSnakeLength().toString()
+      this.scene.snakeManager.snakes[0].getSnakeLength().toString()
     )
 
     this.redrawRectangle()
@@ -103,7 +103,7 @@ export default class Overlay {
   }
 
   private addSnakeLength () {
-    const initSnakeLength = this.scene.snake.getSnakeLength()
+    const initSnakeLength = this.scene.snakeManager.snakes[0].getSnakeLength()
     const textStartY = this.innerStartY + this.getPrevTextIndent()
 
     this.snakeLengthText = this.scene.add.bitmapText(

@@ -13,7 +13,7 @@ export default class Snake {
   // съеденные бонусы (внутри змеи) в виде индексов относительно bodyPartsSprites элементов
   public bodyPartsBonuses: any[] = []
   public size: number
-  public readonly DIRECTIONS = {
+  public static readonly DIRECTIONS = {
     UP: 'up',
     RIGHT: 'right',
     DOWN: 'down',
@@ -21,13 +21,15 @@ export default class Snake {
   }
   private initialLength: number = 4; 
   private dead: boolean = false
-  private currentDir: string = this.DIRECTIONS.UP
+  private currentDir: string = Snake.DIRECTIONS.UP
   private lastMoveDir: string = this.currentDir
   private scene: GameScene
-  private name: string;
+  public readonly name: string;
+  public readonly cursors: Phaser.Input.Keyboard.CursorKeys;
 
-  constructor (scene, x, y, name) {
+  constructor (scene, x, y, name, cursors) {
     this.name = name;
+    this.cursors = cursors;
     this.scene = scene
     this.snakeHeadX = x
     this.snakeHeadY = y
@@ -262,10 +264,10 @@ export default class Snake {
           }
         }
 
-        turnAndReverseTurn(this.DIRECTIONS.UP, this.DIRECTIONS.LEFT, 2)
-        turnAndReverseTurn(this.DIRECTIONS.UP, this.DIRECTIONS.RIGHT, 0)
-        turnAndReverseTurn(this.DIRECTIONS.RIGHT, this.DIRECTIONS.UP, 12)
-        turnAndReverseTurn(this.DIRECTIONS.LEFT, this.DIRECTIONS.UP, 5)
+        turnAndReverseTurn(Snake.DIRECTIONS.UP, Snake.DIRECTIONS.LEFT, 2)
+        turnAndReverseTurn(Snake.DIRECTIONS.UP, Snake.DIRECTIONS.RIGHT, 0)
+        turnAndReverseTurn(Snake.DIRECTIONS.RIGHT, Snake.DIRECTIONS.UP, 12)
+        turnAndReverseTurn(Snake.DIRECTIONS.LEFT, Snake.DIRECTIONS.UP, 5)
       } else { // middle part
         // ['right', 'left'].includes(dir)
         // const frame = ['up', 'down'].includes(dir) ? MIDDLE.vertical : MIDDLE.horizontal
@@ -274,7 +276,7 @@ export default class Snake {
           MIDDLE.horizontal,
           MIDDLE.vertical
         ][
-          +[this.DIRECTIONS.UP, this.DIRECTIONS.DOWN].includes(dir)
+          +[Snake.DIRECTIONS.UP, Snake.DIRECTIONS.DOWN].includes(dir)
           ])
       }
     }
@@ -308,16 +310,16 @@ export default class Snake {
 
   private changePosByDir (dir, pos) {
     switch (dir) {
-      case this.DIRECTIONS.UP:
+      case Snake.DIRECTIONS.UP:
         pos.y -= this.size
         break
-      case this.DIRECTIONS.RIGHT:
+      case Snake.DIRECTIONS.RIGHT:
         pos.x += this.size
         break
-      case this.DIRECTIONS.DOWN:
+      case Snake.DIRECTIONS.DOWN:
         pos.y += this.size
         break
-      case this.DIRECTIONS.LEFT:
+      case Snake.DIRECTIONS.LEFT:
         pos.x -= this.size
         break
     }
@@ -327,8 +329,8 @@ export default class Snake {
 
   private getDirOpposite (dir) {
     const dirs = [
-      [this.DIRECTIONS.UP, this.DIRECTIONS.DOWN],
-      [this.DIRECTIONS.RIGHT, this.DIRECTIONS.LEFT]
+      [Snake.DIRECTIONS.UP, Snake.DIRECTIONS.DOWN],
+      [Snake.DIRECTIONS.RIGHT, Snake.DIRECTIONS.LEFT]
     ]
 
     for (const dirArr of dirs) {
