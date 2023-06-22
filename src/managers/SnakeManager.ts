@@ -210,15 +210,22 @@ export default class SnakeManager {
     const delay_to_came_back = 3000; // 3s
     const name = snake.name;
     const cursors = snake.cursors;
+    const life = snake.life - 1;
     const index = this.snakes.indexOf(snake);
     this.snakes.splice(index, 1);
     snake.destroy();
+    this.soundManager.play('dead');
+    if (life === 0 && this.snakes.length === 1) {
+      this.scene.onWin(this.snakes[0]);
+    }
     // after {delay_to_came_back} the snake came back to life
     setTimeout(() => {
-      const ceilPos = this.scene.getRandomCeil();
-
-      let newSnake = new Snake(this.scene, ceilPos.x, ceilPos.y, name, cursors);
-      this.snakes.push(newSnake);
+      if (life > 0) {
+        const ceilPos = this.scene.getRandomCeil();
+        let newSnake = new Snake(this.scene, ceilPos.x, ceilPos.y, name, cursors);
+        newSnake.life = life;
+        this.snakes.push(newSnake);
+      }
     }, delay_to_came_back);
   }
 

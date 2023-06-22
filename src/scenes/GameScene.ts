@@ -147,15 +147,14 @@ export default class GameScene extends Phaser.Scene {
     })
   }
 
-  private onDead () {
-    const score = this.overlay.getApplesCounter()
+  public onWin (snake: Snake) {
+    const score = snake.getSnakeLength()
     const maxScore = this.storage.get('max-score')
 
     if (score > maxScore || maxScore === undefined) {
       this.storage.set('max-score', score)
     }
 
-    this.soundManager.play('dead')
     this.scene.start('MainMenuScene')
   }
 

@@ -24,6 +24,7 @@ export default class Snake {
   private currentDir: string = Snake.DIRECTIONS.UP
   private lastMoveDir: string = this.currentDir
   private scene: GameScene
+  public life: number = 4; 
   public readonly name: string;
   public readonly cursors: Phaser.Input.Keyboard.CursorKeys;
 
