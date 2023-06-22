@@ -43,7 +43,7 @@ export default class GameScene extends Phaser.Scene {
     this.storage = new LocalStorage()
     this.soundManager = new SoundManager()
     this.snakeManager = new SnakeManager(this, this.storage, this.soundManager);
-    this.snakeManager.initSnake(2);
+    this.snakeManager.initSnake(3);
     this.overlay = new Overlay(this)
 
     window.game.showOverlay()

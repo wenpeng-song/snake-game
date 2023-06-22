@@ -28,6 +28,10 @@ export default class BootScene extends Phaser.Scene {
       frameWidth: 64
       // frameHeight: 64
     })
+    this.load.spritesheet('snake3', 'assets/sprites/snake3.png', {
+      frameWidth: 64
+      // frameHeight: 64
+    })
     this.load.image('background', 'assets/sprites/background.png')
     this.load.image('timer', 'assets/sprites/timer.png')
     this.load.atlas('fruits', 'assets/sprites/fruits.png', 'assets/sprites/fruits.json')
