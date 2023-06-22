@@ -2,11 +2,12 @@ import * as Phaser from 'phaser';
 
 import GameScene from '~/scenes/GameScene'
 import { dephs, gameWidth } from '~/config'
+import Snake from '../objects/Snake';
 
 export default class Overlay {
   private readonly scene: GameScene
   private applesCounterText!: Phaser.GameObjects.BitmapText
-  private snakeLengthText!: Phaser.GameObjects.BitmapText
+  private snakeLengthTexts: Phaser.GameObjects.BitmapText[] = [];
   private timerText!: Phaser.GameObjects.BitmapText
   private graphicsRectangle!: Phaser.GameObjects.Graphics
   private applesCounter: number = 0
@@ -23,28 +24,49 @@ export default class Overlay {
   constructor (scene) {
     this.scene = scene
 
-    this.addApplesCounter()
+    // this.addApplesCounter()
     this.addSnakeLength()
     this.addTimer()
 
-    this.texts = [this.applesCounterText, this.snakeLengthText, this.timerText]
+    this.texts = [...this.snakeLengthTexts, this.timerText]
     this.totalTextLines = this.texts.length
 
     this.addRectangle()
   }
 
-  public incrementApplesCounter () {
-    this.applesCounterText.setText(
-      (++this.applesCounter).toString()
-    )
+  // public incrementApplesCounter () {
+  //   this.applesCounterText.setText(
+  //     (++this.applesCounter).toString()
+  //   )
 
-    this.redrawRectangle()
+  //   this.redrawRectangle()
+  // }
+
+  private snakeLens = {
+    snake: 0,
+    snake2: 0,
+    snake3: 0
   }
-
+  private resetSnakeLen() {
+    for (const key in this.snakeLens) {
+      if (Object.prototype.hasOwnProperty.call(this.snakeLens, key)) {
+        this.snakeLens[key] = 0;
+      }
+    }
+  }
   public updateSnakeLength () {
-    this.snakeLengthText.setText(
-      this.scene.snakeManager.snakes[0].getSnakeLength().toString()
-    )
+    this.resetSnakeLen();
+    this.snakeLengthTexts.forEach((snakeLengthText, index) => {
+      this.scene.snakeManager.snakes.forEach((snake) => {
+        for (var key in this.snakeLens) {
+          if (key === snake.name) {
+            this.snakeLens[key] = snake.getSnakeLength();
+          }
+        }
+      });
+      const scores = Object.values(this.snakeLens);
+      snakeLengthText.setText(scores[index].toString());
+    })
 
     this.redrawRectangle()
   }
@@ -80,52 +102,60 @@ export default class Overlay {
       .setDepth(dephs.overlayRectangle)
   }
 
-  private addApplesCounter () {
-    const initApplesCount = this.applesCounter
+  // private addApplesCounter () {
+  //   const initApplesCount = this.applesCounter
 
-    this.applesCounterText = this.scene.add.bitmapText(
-      this.getTextX(),
-      this.innerStartY,
-      'main-font',
-      initApplesCount.toString(),
-      this.textSize
-    )
-    .setDepth(dephs.text)
-    this.scene.add.sprite(
-      this.innerStartX,
-      this.innerStartY + this.getHalfSpriteSize(),
-      'snake',
-      15
-    )
-    .setDepth(dephs.text)
-    .setDisplaySize(this.spriteSize, this.spriteSize)
-    .setAngle(20)
-  }
+  //   this.applesCounterText = this.scene.add.bitmapText(
+  //     this.getTextX(),
+  //     this.innerStartY,
+  //     'main-font',
+  //     initApplesCount.toString(),
+  //     this.textSize
+  //   )
+  //   .setDepth(dephs.text)
+  //   this.scene.add.sprite(
+  //     this.innerStartX,
+  //     this.innerStartY + this.getHalfSpriteSize(),
+  //     'snake',
+  //     15
+  //   )
+  //   .setDepth(dephs.text)
+  //   .setDisplaySize(this.spriteSize, this.spriteSize)
+  //   .setAngle(20)
+  // }
 
   private addSnakeLength () {
-    const initSnakeLength = this.scene.snakeManager.snakes[0].getSnakeLength()
-    const textStartY = this.innerStartY + this.getPrevTextIndent()
-
-    this.snakeLengthText = this.scene.add.bitmapText(
-      this.getTextX(),
-      textStartY,
-      'main-font',
-      initSnakeLength.toString(),
-      this.textSize
-    )
-    .setDepth(dephs.text)
-    this.scene.add.sprite(
-      this.innerStartX,
-      textStartY + this.getHalfSpriteSize(),
-      'snake',
-      4
-    )
-    .setDepth(dephs.text)
-    .setDisplaySize(this.spriteSize, this.spriteSize)
+    for (let i = 0; i < this.scene.snakeManager.snakes.length; i++) {
+      const snake = this.scene.snakeManager.snakes[i];
+      const initSnakeLength = snake.getSnakeLength()
+      const textStartY = this.innerStartY + this.getPrevTextIndent(i)
+  
+      this.snakeLengthTexts.push(this.scene.add.bitmapText(
+        this.getTextX(),
+        textStartY,
+        'main-font',
+        initSnakeLength.toString(),
+        this.textSize
+      )
+      .setDepth(dephs.text))
+  
+      let snakeName = 'snake';
+      if (i != 0) {
+        snakeName += (i+1);
+      }
+      this.scene.add.sprite(
+        this.innerStartX,
+        textStartY + this.getHalfSpriteSize(),
+        snakeName,
+        4
+      )
+      .setDepth(dephs.text)
+      .setDisplaySize(this.spriteSize, this.spriteSize) 
+    }
   }
 
   private addTimer () {
-    const textStartY = this.innerStartY + this.getPrevTextIndent(2)
+    const textStartY = this.innerStartY + this.getPrevTextIndent(3)
     const initTimer = '00:00'
 
     this.timerText = this.scene.add.bitmapText(

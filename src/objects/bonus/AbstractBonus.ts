@@ -8,7 +8,7 @@ export default abstract class AbstractBonus {
   }
 
   protected onCollisionWithSnake () {
-    this.scene.overlay.incrementApplesCounter()
+    // this.scene.overlay.incrementApplesCounter()
     this.scene.overlay.updateSnakeLength()
   }
 }
